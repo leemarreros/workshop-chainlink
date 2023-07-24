@@ -12,7 +12,9 @@ Sigue los siguientes pasos antes de comenzar el workshop:
 
 - Usar Node version 14.x (usar `nvm` para cambiar de versión en Node)
 
-- Hacer fork del [repositorio de la clase](https://github.com/leemarreros/workshop-chainlink)
+- Hacer clone del [repositorio de la clase](https://github.com/leemarreros/workshop-chainlink)
+
+  - `$ git clone https://github.com/leemarreros/workshop-chainlink`
 
 - Ubicarte en el branch `main` y luego instalar los paquetes de NPM
 
@@ -80,4 +82,12 @@ Sigue los siguientes pasos antes de comenzar el workshop:
   https://mumbai.polygonscan.com/address/0xA54a60124cE211f50dA0aA1cB7C5514B9f0dD58b#code
   ```
 
-  
+Cualquier duda o pregunta en nuestras RRSS:
+
+[Twitter](https://twitter.com/lee.marreros)
+
+[MeetUp](https://www.meetup.com/blockchain-bites/)
+
+[LinkedIn](https://www.linkedin.com/in/lee-marreros/)
+
+[Discord]([https://discord.gg/QSHvdzE8KG](https://discord.com/invite/7qjKQGmjUq))
