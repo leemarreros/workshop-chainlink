@@ -1,7 +1,5 @@
 # WORKSHOP CHAINLINK
 
-
-
 # Requisitos (IMPORTANTE!)
 
 **Completa el set up antes de unirte al workshop para evitar demoras y retrasos en la clase!**
@@ -28,20 +26,20 @@ Sigue los siguientes pasos antes de comenzar el workshop:
 
 2. Instalar Metamask y Obtener Matic tokens
 
-- Instalar extensión de Metamask en Navegador. [Descargar aquí](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn). Crear cuenta. Habilitar una billetera en Metamask. Cambiar a la red `Mumbai`. 
+- Instalar extensión de Metamask en Navegador. [Descargar aquí](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn). Crear cuenta. Habilitar una billetera en Metamask. Cambiar a la red `Mumbai`.
 - Enviar `Matic` a la billetera creada usando el `address` de la billetera. Para solicitar `Matic`, ingresar a [Polygon Faucet](https://faucet.polygon.technology/) o [Faucet de Alchemy](https://mumbaifaucet.com/). Recibirás un balance en `Matic`
 
 3. Añadir Mumbai a Metamask
 
-* Dirigirte a [Mumbai Polygon Scan](https://mumbai.polygonscan.com/)
+- Dirigirte a [Mumbai Polygon Scan](https://mumbai.polygonscan.com/)
 
-* Hacia el final de la página buscar el botón `Add Mumbai Network`
+- Hacia el final de la página buscar el botón `Add Mumbai Network`
 
   ![image-20230723160538721](https://github.com/leemarreros/workshop-chainlink/assets/3300958/cae3e423-3ec5-4bff-a84d-3540bf80075a)
 
-* Se abrirará una ventana de Metamask. Dar confirmar y continuar hasta que se efectúe el cambio de red
+- Se abrirará una ventana de Metamask. Dar confirmar y continuar hasta que se efectúe el cambio de red
 
-4. Crear archivo de Secrets `.env` duplicando el archivo `.env-copy`. Corre el siguiente comando el terminal
+4. Crear archivo de Secrets `.env` duplicando el archivo `.env-copy`. Corre el siguiente comando en el terminal
 
 - `$ cp .env-copy .env`
 
@@ -53,28 +51,28 @@ Sigue los siguientes pasos antes de comenzar el workshop:
 
 6. Obtener LINK (gas del Oráculo)
 
-* Obtener el token LINK del faucet. Dirigirte a [este link](https://faucets.chain.link/mumbai). Fíjate que te encuentres en la red **Mumbai** en tod momento
+- Obtener el token LINK del faucet. Dirigirte a [este link](https://faucets.chain.link/mumbai). Fíjate que te encuentres en la red **Mumbai** en tod momento
 
 7. Crea una suscripción en Chainlink VRF
 
-* Dirígete a [vrf chailink link mumbai](https://vrf.chain.link/mumbai)
+- Dirígete a [vrf chailink link mumbai](https://vrf.chain.link/mumbai)
 
-* Clic en `Create Subscription` => `Create subscription` => Aprobar en Metamask. Esperar...
+- Clic en `Create Subscription` => `Create subscription` => Aprobar en Metamask. Esperar...
 
-* Hacer clic en `Add funds` y confirmar con la billetera de Metamask
+- Hacer clic en `Add funds` y confirmar con la billetera de Metamask
 
   ![image-20230723162645035](https://github.com/leemarreros/workshop-chainlink/assets/3300958/d01f7da4-2ad4-431c-86dc-06a9302fc08f)
 
 8. Solicitar acceso a Chailink Functions BETA
 
-* Este programa se encuentra en **BETA** y se require solicitar accesso
-* Dirígete [a este link para pedir acceso](https://chainlinkcommunity.typeform.com/requestaccess?typeform-source=docs.chain.link)
+- Este programa se encuentra en **BETA** y se require solicitar accesso
+- Dirígete [a este link para pedir acceso](https://chainlinkcommunity.typeform.com/requestaccess?typeform-source=docs.chain.link)
 
 9. Correr el siguiente comando en el terminarl para evaluar si todo está bien
 
-* `$ npx hardhat run --network mumbai scripts/deployBasic_1.js`
+- `$ npx hardhat run --network mumbai scripts/deployBasic_1.js`
 
-* De ser correcto les saldrá el siguiente mensaje en el terminal:
+- De ser correcto les saldrá el siguiente mensaje en el terminal:
 
   ```
   Basic deployed to: 0xA54a60124cE211f50dA0aA1cB7C5514B9f0dD58b
@@ -90,4 +88,4 @@ Cualquier duda o pregunta en nuestras RRSS:
 
 [LinkedIn](https://www.linkedin.com/in/lee-marreros/)
 
-[Discord]([https://discord.gg/QSHvdzE8KG](https://discord.com/invite/7qjKQGmjUq))
+[Discord](https://discord.gg/QSHvdzE8KG)
