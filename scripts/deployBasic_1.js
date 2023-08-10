@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const BasicRandomNumber2 = await ethers.getContractFactory(
-    "BasicRandomNumber2"
+    "BasicRandomNumber_2Exercise"
   );
   const basicRandomNumber2 = await BasicRandomNumber2.deploy();
   var tx = await basicRandomNumber2.deploymentTransaction();

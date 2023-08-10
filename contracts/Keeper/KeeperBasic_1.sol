@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 
+// https://pad.riseup.net/p/chainlink-workshop
 // 1.
-// import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
+import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
 
 // 2. Heredar
 // contract VotacionKeeperSol is AutomationCompatibleInterface {
-contract VotacionKeeper {
+contract VotacionKeeper is AutomationCompatibleInterface {
     uint256 idCandidatoUno = 1;
     uint256 idCandidatoDos = 2;
 
@@ -30,6 +31,7 @@ contract VotacionKeeper {
     }
 
     function finalizarVotacion() public {
+        // cuando se llega a N votos, finalizar votacion
         if (
             votosCandidatos[idCandidatoUno] == votosCandidatos[idCandidatoDos]
         ) {
@@ -52,8 +54,27 @@ contract VotacionKeeper {
     }
 
     // 3. implementar checkUpkeep
-    // function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory /* performData */){}
+    // Validar cierta logica
+    // - si true, ejecutar performUpkeep
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory performData)
+    {
+        // definir una logica. si es true llamar al callback
+
+        performData = abi.encode(totalVotos());
+        return (totalVotos() > 1, performData);
+    }
 
     // 4. implementar performUpkeep
-    // function performUpkeep(bytes calldata /* performData */) external override {}
+    function performUpkeep(bytes calldata performData) external override {
+        uint256 _totalVotos = abi.decode(performData, (uint256));
+        if (totalVotos() > 1) {
+            finalizarVotacion();
+        }
+    }
 }

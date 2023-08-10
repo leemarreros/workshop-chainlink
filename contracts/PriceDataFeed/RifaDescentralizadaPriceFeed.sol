@@ -2,9 +2,10 @@
 pragma solidity 0.8.19;
 
 import {ServicioRandom} from "./ServicioRandom.sol";
+import {PriceFeed_1} from "./PriceFeed_1.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract RifaDescentralizadaPrev is ServicioRandom {
+contract RifaDescentralizadaPriceFeed is ServicioRandom, PriceFeed_1 {
     struct Rifa {
         uint256 premio; // en USDC
         uint256 precio; // precio de participacion en USDC
@@ -15,6 +16,15 @@ contract RifaDescentralizadaPrev is ServicioRandom {
         address[] participantes;
     }
     mapping(address => Rifa) public rifas;
+
+    // Relaciona requestId con creador de la rifa
+    // Más adelante voy a poder el requestId para encontrar al creador
+    // Y usando al creador podré encontrar la rifa
+    mapping(uint256 requestId => address creador) requestIdToCreador;
+
+    // Estrategia PULL
+    // Los premios se acumulan y luego cada usuario reclama su balance
+    mapping(address => uint256) public balances;
 
     IERC20 public usdc;
 
@@ -86,35 +96,20 @@ contract RifaDescentralizadaPrev is ServicioRandom {
         // Verifica que rifa terminó
         require(_rifa.fechaFin < block.timestamp, "Rifa aun no termina");
 
-        uint256 randomNumber = _getPseudoRandomNumber();
-        _calcularGanadorDistribuirPremio(randomNumber, _creador);
-    }
-
-    mapping(uint256 requestId => address creador) requestIdToCreator;
-
-    function finalizarRifaVRF(address _creador) public {
-        Rifa storage _rifa = rifas[_creador];
-
-        // rifa existe
-        require(_rifa.creador != address(0), "Rifa no existe");
-
-        // Verifica que rifa terminó
-        require(_rifa.fechaFin < block.timestamp, "Rifa aun no termina");
-
         uint256 requestId = requestRandomWordsVRF();
-        requestIdToCreator[requestId] = _creador;
+        requestIdToCreador[requestId] = _creador;
     }
 
     function fulfillRandomWords(
         uint256 requestId,
         uint256[] memory _randomWords
     ) internal override {
-        address _creador = requestIdToCreator[requestId];
+        address _creador = requestIdToCreador[requestId];
+
+        // Calcular ganador
         uint256 randomNumber = _randomWords[0];
         _calcularGanadorDistribuirPremio(randomNumber, _creador);
     }
-
-    mapping(address => uint256) public balances;
 
     function _calcularGanadorDistribuirPremio(
         uint256 randomNumber,
@@ -130,22 +125,41 @@ contract RifaDescentralizadaPrev is ServicioRandom {
 
         // Transfiere premio al ganador
         balances[ganador] += _rifa.premio;
-        // usdc.transfer(ganador, _rifa.premio);
 
         // Transfiere acumulado al creador de la rifa
         uint256 fee = _rifa.acumulado / 10;
         uint256 net = _rifa.acumulado - fee;
         balances[_creador] += net;
-        // usdc.transfer(_creador, net);
 
         emit FinalizaRifa(_creador, ganador, _rifa.premio, net);
     }
 
-    function reclamarPremio() public {
-        uint256 balance = balances[msg.sender];
-        require(balance > 0, "No tienes balance");
+    function reclamarPremioEnEth() public {
+        uint256 balanceUsdc = balances[msg.sender];
+        require(balanceUsdc > 0, "No tienes premio");
         balances[msg.sender] = 0;
-        usdc.transfer(msg.sender, balance);
+
+        // Convertir balanceUsdc a balanceEth uasndo getRatioEthUsd
+        // 1. Tener en cuenta que getRatioEthUsd tiene 8 decimales
+        // 2. Tener en cuenta que USDC tiene 6 decimales
+        // (1 y 2) Eso quiere decir que 10 ** 6 == 10 ** 8
+        // 3. Tener en cuenta que ETH tiene 18 decimales
+
+        // 1 ETH = 185000000000 USDC (agregador chainlink)
+        // X Eth = 300000000(00) USDC
+        // => 30000000000/185000000000 = 0.16216 ETH (sin incluir 18 decimales)
+
+        // X =[ 300 * (usdc decimals) * (decimals faltante) * (Eth Decimals) ]/ [1850 * (getRatio decimals)]
+        // X =[ 300 * 10 ** 6 * 10 ** 2 * 10 ** 18] / [1850 * 10 ** 8]
+        // 162162162162162180 Eth (con 18 decimals)
+        // 0.16216 ETH (sin 18 decimales)
+
+        (int ratio, uint256 decimals) = getRatioEthUsd();
+        uint256 numerador = balanceUsdc * 10 ** (decimals - 6) * 10 ** 18;
+        uint256 denominador = uint256(ratio);
+        uint256 balanceEth = numerador / denominador;
+
+        payable(msg.sender).transfer(balanceEth);
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -159,18 +173,5 @@ contract RifaDescentralizadaPrev is ServicioRandom {
         rifas[_creador].fechaInicio = 0;
         rifas[_creador].fechaFin = 0;
         rifas[_creador].participantes = new address[](0);
-    }
-
-    function _getPseudoRandomNumber() internal view returns (uint256) {
-        return
-            uint256(
-                keccak256(
-                    abi.encodePacked(
-                        msg.sender,
-                        blockhash(block.number - 1),
-                        block.timestamp
-                    )
-                )
-            );
     }
 }

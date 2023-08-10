@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  const VotacionKeeper = await ethers.getContractFactory("VotacionKeeperSol");
+  const VotacionKeeper = await ethers.getContractFactory("VotacionKeeper");
   const votacionKeeper = await VotacionKeeper.deploy();
   var tx = await votacionKeeper.deploymentTransaction();
   await tx.wait(10);
